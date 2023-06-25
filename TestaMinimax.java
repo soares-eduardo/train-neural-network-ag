@@ -27,8 +27,9 @@ public class TestaMinimax
      */
     public Sucessor joga(){
         Minimax mini = new Minimax(velha);
-        //Sucessor melhor = mini.getMelhor(); //chama versão clássica
-        return mini.getMelhorAB(); //chama versão Alfa Beta Pruning
+        Sucessor melhor = mini.getMelhor(); //chama versão clássica
+        //return mini.getMelhorAB(); //chama versão Alfa Beta Pruning
+        return melhor;
     }    
     /**
      * Gera um String do estado atual do tabuleiro

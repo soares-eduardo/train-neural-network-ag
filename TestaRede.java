@@ -13,6 +13,10 @@ public class TestaRede {
     private Rede rn;
 
     public TestaRede() {
+
+    }
+
+    public Resultado joga(double cromossomo[]) {
         // ------------------------ EXEMPLO DE TABULEIRO
         // ------------------------------------------
         // tabuleiro do jogo da velha - Exemplo de teste
@@ -51,7 +55,10 @@ public class TestaRede {
         int pesosOculta = oculta + 1; // numero de pesos por neuronio da camada oculta
         int pesosSaida = saida + 1; // numero de pesos por neuronio da camada de saida
         int totalPesos = pesosOculta * oculta + pesosSaida * saida;
-        double[] cromossomo = new double[totalPesos];
+        // 10 9 10 9
+        // double[] cromossomo = new double[totalPesos];
+
+        System.out.println("TAMANHO DO CROMOSSOMO: " + cromossomo.length);
 
         for (int i = 0; i < cromossomo.length; i++) {
             cromossomo[i] = gera.nextDouble();
@@ -71,10 +78,8 @@ public class TestaRede {
 
         // --------------EXEMPLO DE EXECUCAO ----------------------------------------
 
-        // for(int n=1; n<=3; n++){
         int n = 0;
         while (true) {
-            // TODO Descomentar o número de rodadas com um count
             System.out.println("\n\n>>>RODADA: " + n);
             // Exibe um exemplo de propagação : saida dos neurônios da camada de saída
             double[] saidaRede = rn.propagacao(tabuleiro);
@@ -97,9 +102,11 @@ public class TestaRede {
             System.out.println("Neuronio de maior valor: " + indMaior + " - " + saidaRede[indMaior]);
             System.out.println(">>> Rede escolheu - Linha: " + linha + " Coluna: " + coluna);
 
-            if (tabuleiroVelha[linha][coluna] != -1)
+            if (tabuleiroVelha[linha][coluna] != -1) {
+                // TODO Punir a rede
                 System.out.println("Posicao ocupada");
-            else {
+                return new Resultado(tabuleiroVelha, false);
+            } else {
                 tabuleiroVelha[linha][coluna] = 1;
 
                 System.out.println("\nTabuleiro apos jogada: ");
@@ -114,27 +121,37 @@ public class TestaRede {
             // Verifica se há vencedor
             if (verificaVitoria(tabuleiroVelha)) {
                 System.out.println("Vitória da Rede Neural");
-                break;
+                return new Resultado(tabuleiroVelha, false);
             }
 
             // Verifica se há empate
             if (verificaEmpate(tabuleiroVelha)) {
                 System.out.println("Empate");
-                break;
+                return new Resultado(tabuleiroVelha, true);
             }
 
-            n++;
-
             // -----------------------------------------JOGA MINIMAX
-            TestaMinimax mini = new TestaMinimax(tabuleiroVelha);
-            Sucessor melhor = mini.joga();
+            Random random = new Random();
 
-            System.out.println(">>> MINIMAX escolheu - Linha: " + melhor.getLinha() + " Coluna: " + melhor.getColuna());
+            int linhaMinimax, colunaMinimax = 0;
+            if (Math.random() < 0.25) {
+                linhaMinimax = (int) random.nextInt(3);
+                colunaMinimax = (int) random.nextInt(3);
+            } else {
+                TestaMinimax mini = new TestaMinimax(tabuleiroVelha);
+                Sucessor melhor = mini.joga();
+                linhaMinimax = melhor.getLinha();
+                colunaMinimax = melhor.getColuna();
+            }
 
-            if (tabuleiroVelha[melhor.getLinha()][melhor.getColuna()] != -1)
-                System.out.println("Posicao ocupada");
-            else {
-                tabuleiroVelha[melhor.getLinha()][melhor.getColuna()] = 0;
+            System.out.println(
+                    ">>> MINIMAX escolheu - Linha: " + linhaMinimax + " Coluna: " + colunaMinimax);
+
+            if (tabuleiroVelha[linhaMinimax][colunaMinimax] != -1) {
+                System.out.println("Posicao ocupada PELO MINIMAX");
+                return new Resultado(tabuleiroVelha, false);
+            } else {
+                tabuleiroVelha[linhaMinimax][colunaMinimax] = 0;
 
                 System.out.println("\nTabuleiro apos jogada: ");
                 for (int i = 0; i < tabuleiroVelha.length; i++) {
@@ -148,13 +165,13 @@ public class TestaRede {
             // Verifica se há vencedor
             if (verificaVitoria(tabuleiroVelha)) {
                 System.out.println("Vitória do Minimax");
-                break;
+                return new Resultado(tabuleiroVelha, false);
             }
 
             // Verifica se há empate
             if (verificaEmpate(tabuleiroVelha)) {
                 System.out.println("Empate");
-                break;
+                return new Resultado(tabuleiroVelha, true);
             }
 
             n++;
@@ -168,8 +185,9 @@ public class TestaRede {
                 }
             }
         }
-        // }
     }
+
+    
 
     public static boolean verificaVitoria(int[][] tabuleiro) {
         // Verificação das linhas
@@ -210,7 +228,5 @@ public class TestaRede {
 
     public static void main(String args[]) {
         TestaRede teste = new TestaRede();
-
     }
-
 }
