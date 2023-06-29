@@ -1,3 +1,5 @@
+package genetics;
+
 public class Heuristic {
 
     public Heuristic() {

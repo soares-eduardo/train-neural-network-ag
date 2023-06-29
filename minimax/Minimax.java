@@ -1,3 +1,4 @@
+package minimax;
 
 /**
  * Write a description of class Minimax here.

@@ -1,3 +1,5 @@
+package genetics;
+
 public class Resultado {
     private int[][] tabuleiro;
     private boolean isEmpate;

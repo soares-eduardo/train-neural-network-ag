@@ -1,20 +1,25 @@
+package genetics;
+
 import java.util.Random;
 
+import neural_network.TestaRede;
+
 public class AlgoritmoGenetico {
-    static int NUMERO_GERACOES = ;
-    static int QTD_CROMOSSOMOS = 50;
+    static int NUMERO_GERACOES = 2;
+    static int QTD_CROMOSSOMOS = 100;
     static int QTD_PESOS = 180;
     static double TAXA_MUTACAO = 0.6;
     static double AMPLITUDE_MUTACAO = 0.2;
 
-    public static void main(String[] args) {
+    public AlgoritmoGenetico() {
 
+    }
+
+    public double[] genetico(int nivelMinimax) {
         double populacaoInicial[][] = gerarPopulacaoInicial();
         double populacaoIntermediaria[][] = new double[QTD_CROMOSSOMOS][QTD_PESOS + 1];
 
         for (int g = 0; g < NUMERO_GERACOES; g++) {
-
-            // Joga o jogo da velha
             for (int i = 0; i < QTD_CROMOSSOMOS; i++) {
 
                 double[] cromossomo = new double[QTD_PESOS];
@@ -22,7 +27,7 @@ public class AlgoritmoGenetico {
                     cromossomo[j] = populacaoInicial[i][j];
                 }
 
-                Resultado resultado = new TestaRede().joga(cromossomo);
+                Resultado resultado = new TestaRede().joga(cromossomo, nivelMinimax);
                 populacaoInicial[i][QTD_PESOS] = calcularAptidao(resultado);
             }
 
@@ -30,17 +35,24 @@ public class AlgoritmoGenetico {
 
             // Critério de Parada
             if (g == NUMERO_GERACOES - 1) {
-                System.out.println("Melhor cromossomo: " + populacaoIntermediaria[0][QTD_PESOS]);
-                break;
+                System.out.println("Melhor cromossomo: ");
+
+                for (double pesos : populacaoIntermediaria[0]) {
+                    System.out.print(" " + pesos + ", ");
+                }
+
+                return populacaoIntermediaria[0];
             }
 
             crossover(populacaoInicial, populacaoIntermediaria);
             populacaoInicial = populacaoIntermediaria;
             mutacao(populacaoInicial);
         }
+
+        return null;
     }
 
-    public static void mutacao(double[][] populacao) {
+    private static void mutacao(double[][] populacao) {
         Random aleatorio = new Random();
 
         for (int i = 0; i < populacao.length; i++) {
@@ -53,18 +65,13 @@ public class AlgoritmoGenetico {
     }
 
     private static void crossover(double[][] populacao, double[][] populacaoIntermediaria) {
-        for (int i = 1; i < QTD_CROMOSSOMOS; i += 2) {
+        System.out.println("Caiu no crossover");
 
-            int debugI = i;
-
-            // TODO Verificar se os individuos não são iguais
+        for (int i = 1; i < QTD_CROMOSSOMOS; i++) {
             int individuo1 = torneio(populacao);
             int individuo2 = torneio(populacao);
 
             for (int j = 0; j < QTD_PESOS; j++) {
-
-                int debugJ = j;
-
                 populacaoIntermediaria[i][j] = calcularMediaPesos(populacao[individuo1][j], populacao[individuo2][j]);
             }
         }
@@ -125,9 +132,8 @@ public class AlgoritmoGenetico {
         for (int i = 0; i < QTD_CROMOSSOMOS; i++) {
             for (int j = 0; j < QTD_PESOS; j++) {
                 populacao[i][j] = gera.nextDouble();
-                // if (gera.nextBoolean()) {
-                //     populacao[i][j] = gera.nextDouble();
-                // }
+                if (gera.nextBoolean())
+                    populacao[i][j] = populacao[i][j] * -1;
             }
         }
 

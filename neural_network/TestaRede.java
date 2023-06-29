@@ -1,3 +1,4 @@
+package neural_network;
 
 /**
  * Escreva a descrição da classe TestaRede aqui.
@@ -6,6 +7,10 @@
  * @version 12/11/2020
  */
 import java.util.Random;
+
+import genetics.Resultado;
+import minimax.Sucessor;
+import minimax.TestaMinimax;
 
 public class TestaRede {
     private double[] tabuleiro;
@@ -16,7 +21,7 @@ public class TestaRede {
 
     }
 
-    public Resultado joga(double[] cromossomo) {
+    public Resultado joga(double[] cromossomo, int nivelMinimax) {
         // ------------------------ EXEMPLO DE TABULEIRO
         // ------------------------------------------
         // tabuleiro do jogo da velha - Exemplo de teste
@@ -59,12 +64,12 @@ public class TestaRede {
 
         System.out.println("TAMANHO DO CROMOSSOMO: " + cromossomo.length);
 
-        for (int i = 0; i < cromossomo.length; i++) {
-            cromossomo[i] = gera.nextDouble();
-            if (gera.nextBoolean())
-                cromossomo[i] = cromossomo[i] * -1;
-            // System.out.print(cromossomo[i] + " ");
-        }
+        // for (int i = 0; i < cromossomo.length; i++) {
+        //     cromossomo[i] = gera.nextDouble();
+        //     if (gera.nextBoolean())
+        //         cromossomo[i] = cromossomo[i] * -1;
+        //     // System.out.print(cromossomo[i] + " ");
+        // }
 
         // Setando os pesos na rede
         rn.setPesosNaRede(tabuleiro.length, cromossomo); //
@@ -74,6 +79,8 @@ public class TestaRede {
         // Exibe rede neural
         System.out.println("Rede Neural - Pesos: ");
         System.out.println(rn);
+
+        double nivelMinimaxDouble = definirNivel(nivelMinimax);
 
         // --------------EXEMPLO DE EXECUCAO ----------------------------------------
 
@@ -133,7 +140,8 @@ public class TestaRede {
             Random random = new Random();
 
             int linhaMinimax, colunaMinimax = 0;
-            if (Math.random() < 0.25) {
+
+            if (Math.random() < nivelMinimaxDouble) {
                 linhaMinimax = (int) random.nextInt(3);
                 colunaMinimax = (int) random.nextInt(3);
             } else {
@@ -223,6 +231,17 @@ public class TestaRede {
             }
         }
         return true; // Todas as posições estão preenchidas, é empate
+    }
+
+    public static double definirNivel(int nivelMinimax) {
+        switch (nivelMinimax) {
+            case 1:
+                return 0.66;
+            case 2:
+                return 0.33;
+            default:
+                return 0.0;
+        }
     }
 
     public static void main(String args[]) {
