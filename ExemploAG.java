@@ -59,7 +59,7 @@ public class ExemploAG {
     
     public static void mutacao(int [][]populacao){
         Random gera = new Random();
-        int quantidade = gera.nextInt(3)+1;
+        int quantidade = gera.nextInt(3)+1; 
         
         while(quantidade>0){
             int linha = gera.nextInt(10)+1;

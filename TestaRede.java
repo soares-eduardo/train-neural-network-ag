@@ -16,7 +16,7 @@ public class TestaRede {
 
     }
 
-    public Resultado joga(double cromossomo[]) {
+    public Resultado joga(double[] cromossomo) {
         // ------------------------ EXEMPLO DE TABULEIRO
         // ------------------------------------------
         // tabuleiro do jogo da velha - Exemplo de teste
@@ -55,7 +55,6 @@ public class TestaRede {
         int pesosOculta = oculta + 1; // numero de pesos por neuronio da camada oculta
         int pesosSaida = saida + 1; // numero de pesos por neuronio da camada de saida
         int totalPesos = pesosOculta * oculta + pesosSaida * saida;
-        // 10 9 10 9
         // double[] cromossomo = new double[totalPesos];
 
         System.out.println("TAMANHO DO CROMOSSOMO: " + cromossomo.length);
@@ -227,6 +226,6 @@ public class TestaRede {
     }
 
     public static void main(String args[]) {
-        TestaRede teste = new TestaRede();
+        //esultado resultado = new TestaRede().joga();
     }
 }
